@@ -22,7 +22,7 @@ Una relación está en 3FN si cumple con la 2FN y se eliminan todas las dependen
 
 Categorías de Productos: El nombre y descripción de la categoría no dependen del id_producto, sino de la categoría en sí. Se extrajeron a la tabla CATEGORIA, dejando solo la clave foránea id_categoria en PRODUCTO.
 
-Rol de Usuario: En lugar de guardar el texto del rol dentro del USUARIO, se creó la tabla ROL CON id_rol, nombre Y descripción y se vinculó mediante id_rol en la tabla USUARIO.
+Rol de Usuario: En lugar de guardar el texto del rol dentro del USUARIO, se creó la tabla ROL con id_rol, nombre Y descripción y se vinculó mediante id_rol en la tabla USUARIO.
 
 Medios de Pago: El tipo de pago se aisló en la tabla MEDIO_PAGO relacionándola con VENTA mediante una clave foránea, evitando repetir textos como Efectivo o Transferencia en cada registro de venta.
 
