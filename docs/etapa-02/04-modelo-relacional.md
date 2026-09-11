@@ -1,4 +1,4 @@
---- Esquema Relacional
+--- Modelo relacional en 'Notación Textual Estándar'
 
 * persona (id_persona, nombre, apellido, dni, telefono, correo)
 	* Clave Primaria (PK): id_persona
