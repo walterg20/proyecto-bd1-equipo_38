@@ -98,3 +98,6 @@
 
 * **Proveedor — Producto** (`provee`)
   * Cardinalidad: N a M (Muchos a Muchos).
+  * **Atributos de la relación:**
+    * Fecha
+    * Cantidad
