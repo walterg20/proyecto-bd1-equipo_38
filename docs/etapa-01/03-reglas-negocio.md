@@ -13,5 +13,3 @@ RN05. Todo PRODUCTO tiene asociado uno o varios proveedores. Un PROVEEDOR puede 
 RN06. Toda VENTA debe ser registrada por un único USUARIO (vendedor) responsable de la operación.
 
 RN07. Toda VENTA debe tener asociado un único MEDIO DE PAGO.
-
-RN08. Se debe poder guardar Fecha y Cantidad de los productos que nos traen como mercadería del proveedor.
