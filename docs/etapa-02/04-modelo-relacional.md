@@ -23,7 +23,7 @@
 	* Clave Primaria (PK): id_categoria
 	* Clave Única (UQ): nombre
 
-* producto (id_producto, nombre, stock_actual, precio, id_categoria)
+* producto (id_producto, nombre, stock_actual, precio, id_categoria, esta_activo)
 	* Clave Primaria (PK): id_producto
 	* Clave Foránea (FK): id_categoria referencias categoria(id_categoria)
 
@@ -31,8 +31,8 @@
 	* Clave Primaria (PK): id_proveedor
 	* Clave Única (UQ): cuit
 
-* producto_proveedor (id_producto, id_proveedor)
-	* Clave Primaria (PK compuesta): (id_producto, id_proveedor)
+* producto_proveedor (id_producto, id_proveedor, fecha, cantidad)
+	* Clave Primaria (PK compuesta): (id_producto, id_proveedor, fecha)
 	* Claves Foráneas (FK):
 		* id_producto referencias producto(id_producto)
 		* id_proveedor referencias proveedor(id_proveedor)
