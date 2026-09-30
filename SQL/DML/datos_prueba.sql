@@ -17,6 +17,12 @@ VALUES ('30-71123456-8', 'Maderas & Calabazas del Litoral S.A.', '3794112233'),
 	   ('30-72589631-7', 'Orfebrería Criolla El Palmar',          '3434125896'),
 	   ('30-66987452-8', 'Importadora & Exportadora del Plata S.A','1141236547');
 
+-- INSERCIÓN EN LA TABLA categoria
+INSERT INTO Categoria (id_categoria, nombre, descripcion) VALUES
+(1, 'Mates', 'Mates de calabaza, madera, acero y cuero'),
+(2, 'Bombillas', 'Bombillas de alpaca, acero inoxidable y resorte'),
+(3, 'Termos', 'Termos de acero inoxidable y térmicos');
+
 /*INSERCION TABLA producto
    Asume la existencia previa de las siguientes categorias:
    1 = Mates, 2 = Bombillas, 3 = Termos */
@@ -35,20 +41,32 @@ VALUES  ('Mate Imperial Calabaza Cuero Cincelado', 25, 45000.00, '1', 1),
 /*INSERCION TABLA producto_proveedor
    con fecha explícita */
 INSERT INTO producto_proveedor (id_producto, id_proveedor, fecha, cantidad)
-VALUES  (1, 1, '2026-08-10', 30),
+VALUES  
         (2, 4, '2026-08-12', 40),
         (3, 1, '2026-08-15', 50),
         (4, 4, '2026-08-20', 60),
         (5, 2, '2026-08-22', 70),
         (6, 5, '2026-08-25', 100),
         (7, 9, '2026-09-02', 50),
-        (8, 3, '2026-09-05', 35);
+        (8, 3, '2026-09-05', 35),
+		(9, 1, '2026-08-10', 30);
 
 /*INSERCION TABLA producto_proveedor
   omitiendo la columna fecha */
 INSERT INTO producto_proveedor (id_producto, id_proveedor, cantidad)
 VALUES   (9, 7, 45),
          (10, 10, 25);
+
+-- INSERCIÓN EN TABLA Rol
+INSERT INTO Rol (id_rol, nombre, descripcion) VALUES
+(1, 'Administrador', 'Control total y reportes del sistema'),
+(2, 'Vendedor', 'Atención en punto de venta y cobranza');
+
+-- INSERCIÓN EN TABLA medio_pago (requeridas por la tabla Venta)
+INSERT INTO medio_pago (id_medio_pago, tipo) VALUES
+(1, 'Efectivo'),
+(2, 'Transferencia / Débito'),
+(3, 'Tarjeta de Crédito');
 		 
 -- INSERCIÓN EN LA TABLA Venta
 
