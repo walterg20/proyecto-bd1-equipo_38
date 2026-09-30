@@ -49,3 +49,50 @@ VALUES  (1, 1, '2026-08-10', 30),
 INSERT INTO producto_proveedor (id_producto, id_proveedor, cantidad)
 VALUES   (9, 7, 45),
          (10, 10, 25);
+		 
+-- INSERCIÓN EN LA TABLA Venta
+
+INSERT INTO Venta (id_venta, fecha_hora, total_venta, id_medio_pago, id_persona_usuario, id_persona_cliente) VALUES 
+(1, '2026-09-25 10:15:00', 169000.00, 1, 3, 10),
+(2, '2026-09-25 15:30:00', 38000.00,  2, 1, 12),
+(3, '2026-09-26 11:00:00', 113000.00, 1, 2, 15),
+(4, '2026-09-26 18:45:00', 15000.00,  3, 3, 11),
+(5, '2026-09-27 09:20:00', 211000.00, 1, 1, 14),
+(6, '2026-09-28 14:10:00', 8500.00,   2, 2, 13),
+(7, '2026-09-29 16:05:00', 104000.00, 3, 1, 16),
+(8, '2026-09-30 12:35:00', 60500.00,  1, 3, 10);
+
+-- INSERCIÓN EN LA TABLA Detalle_Venta
+INSERT INTO Detalle_Venta (id_venta, id_producto, precio_congelado, cantidad) VALUES 
+-- Detalles Venta 1 
+(1, 1, 45000.00, 1), 
+(1, 6, 8500.00,  2), 
+(1, 8, 65000.00, 1), 
+
+-- Detalles Venta 2 
+(2, 2, 38000.00, 1), 
+
+-- Detalles Venta 3 
+(3, 3, 35000.00, 1), 
+(3, 7, 14500.00, 2), 
+(3, 9, 48000.00, 1), 
+
+-- Detalles Venta 4 
+(4, 4, 15000.00, 1), 
+
+-- Detalles Venta 5 
+(5, 1, 45000.00, 2), 
+(5, 5, 12000.00, 1), 
+(5, 10, 58000.00, 2),
+
+-- Detalles Venta 6 
+(6, 6, 8500.00,  1),
+
+-- Detalles Venta 7 
+(7, 2, 38000.00, 1),
+(7, 8, 65000.00, 1),
+
+-- Detalles Venta 8 
+(8, 3, 35000.00, 1),
+(8, 7, 14500.00, 1), 
+(8, 5, 12000.00, 1); 
