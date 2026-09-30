@@ -78,3 +78,35 @@ CREATE TABLE Cliente
         REFERENCES Persona (id_persona)
 );
 
+/* TABLA: proveedor */
+CREATE TABLE proveedor(
+id_proveedor INT IDENTITY (1,1) NOT NULL,
+cuit VARCHAR(13) NOT NULL,
+razon_social VARCHAR(150) NOT NULL,
+telefono VARCHAR(12) NULL,
+CONSTRAINT PK_PROVEEDOR PRIMARY KEY (id_proveedor),
+CONSTRAINT UQ_PROVEEDOR_CUIT UNIQUE (cuit)
+);
+
+/* TABLA: producto */
+CREATE TABLE producto(
+id_producto INT IDENTITY(1,1) NOT NULL,
+nombre VARCHAR(150) NOT NULL,
+stock_actual INT NOT NULL,
+precio DECIMAL(10,2) NOT NULL,
+esta_activo CHAR(1) NOT NULL DEFAULT '1',
+id_categoria INT NOT NULL,
+CONSTRAINT PK_PRODUCTO PRIMARY KEY (id_producto),
+CONSTRAINT FK_PRODUCTO_CATEGORIA FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria)
+);
+
+/* TABLA: producto_proveedor */
+CREATE TABLE producto_proveedor(
+id_producto INT NOT NULL,
+id_proveedor INT NOT NULL,
+fecha DATE NOT NULL DEFAULT GETDATE(),
+cantidad INT NOT NULL,
+CONSTRAINT PK_PRODUCTO_PROVEEDOR PRIMARY KEY (id_producto, id_proveedor),
+CONSTRAINT FK_PRODPROV_PRODUCTO FOREIGN KEY (id_producto) REFERENCES producto(id_producto),
+CONSTRAINT FK_PRODPROV_PROVEEDOR FOREIGN KEY (id_proveedor) REFERENCES proveedor(id_proveedor)
+);
