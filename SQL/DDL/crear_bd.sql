@@ -45,3 +45,4 @@ CREATE TABLE Cliente
     CONSTRAINT FK_cliente_persona FOREIGN KEY (id_persona_cliente)
         REFERENCES Persona (id_persona)
 );
+
