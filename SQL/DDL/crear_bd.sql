@@ -16,7 +16,8 @@ CREATE TABLE Persona
     telefono    VARCHAR(20)       NULL,
     correo      VARCHAR(100)      NULL,
     CONSTRAINT PK_persona PRIMARY KEY (id_persona),
-    CONSTRAINT UQ_persona_dni UNIQUE (dni)
+    CONSTRAINT UQ_persona_dni UNIQUE (dni),
+    CONSTRAINT CK_persona_dni CHECK (dni > 0)
 );
 
 /*  TABLA: Usuario. 
