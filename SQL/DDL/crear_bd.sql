@@ -154,3 +154,7 @@ ADD CONSTRAINT CK_PRODUCTO_PRECIO CHECK (precio > 0),
 --Restricciones producto_proveedor 
 ALTER TABLE producto_proveedor
 ADD CONSTRAINT CK_PRODPROV_CANTIDAD CHECK (cantidad > 0);
+
+--Restricciones proveedor
+ALTER TABLE proveedor
+ADD CONSTRAINT CK_PROVEEDOR_CUIT CHECK (cuit LIKE '[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]-[0-9]');
