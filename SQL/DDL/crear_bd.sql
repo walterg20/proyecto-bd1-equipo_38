@@ -144,3 +144,13 @@ ALTER TABLE Venta ADD CONSTRAINT total_venta CHECK(total_venta>0)
 ALTER TABLE DetalleVenta ADD CONSTRAINT pk_detalle_pedido PRIMARY KEY (id_venta, id_producto);
 ALTER TABLE DetalleVenta ADD CONSTRAINT fk_venta FOREIGN KEY (id_venta) REFERENCES Venta(id_venta);
 ALTER TABLE DetalleVenta ADD CONSTRAINT cantidad CHECK(cantidad>0); 
+
+--Restricciones producto 
+ALTER TABLE producto 
+ADD CONSTRAINT CK_PRODUCTO_PRECIO CHECK (precio > 0),
+    CONSTRAINT CK_PRODUCTO_STOCK CHECK (stock_actual >= 0),
+    CONSTRAINT CK_PRODUCTO_ACTIVO CHECK (esta_activo IN ('0', '1'));
+
+--Restricciones producto_proveedor 
+ALTER TABLE producto_proveedor
+ADD CONSTRAINT CK_PRODPROV_CANTIDAD CHECK (cantidad > 0);
