@@ -123,7 +123,7 @@ CREATE TABLE Venta (
 )
 --Crear TABLE Detalle_Venta
 
-CREATE TABLE Detalle_Venta(
+CREATE TABLE DetalleVenta(
 	id_venta int NOT NULL,
 	id_producto int NOT NULL,
 	precio_congelado DECIMAL(10,2) NOT NULL,
@@ -141,5 +141,6 @@ ALTER TABLE Venta ADD CONSTRAINT df_fecha_hora DEFAULT GETDATE() FOR fecha_hora;
 ALTER TABLE Venta ADD CONSTRAINT total_venta CHECK(total_venta>0)
 
 --Detalle_Venta
-ALTER TABLE Detalle_Venta ADD CONSTRAINT fk_detalle_pedido PRIMARY KEY (id_venta, id_producto);
-ALTER TABLE Detalle_Venta ADD CONSTRAINT cantidad CHECK(cantidad>0); 
+ALTER TABLE DetalleVenta ADD CONSTRAINT pk_detalle_pedido PRIMARY KEY (id_venta, id_producto);
+ALTER TABLE DetalleVenta ADD CONSTRAINT fk_venta FOREIGN KEY (id_venta) REFERENCES Venta(id_venta);
+ALTER TABLE DetalleVenta ADD CONSTRAINT cantidad CHECK(cantidad>0); 
