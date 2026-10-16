@@ -3,8 +3,6 @@ EXEC sp_rename 'Detalle_Venta', 'DetalleVenta';
 
 EXEC sp_rename 'medio_pago', 'MedioPago';
 
-EXEC sp_rename 'producto_proveedor', 'ProductoProveedor';
-
 EXEC sp_rename 'producto', 'Producto';
 
 EXEC sp_rename 'proveedor', 'Proveedor';

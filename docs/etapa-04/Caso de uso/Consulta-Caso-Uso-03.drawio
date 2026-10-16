@@ -1,0 +1,82 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Página-1" id="d4rZMWwNEd-kWamhUIs1">
+    <mxGraphModel dx="1704" dy="895" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontColor=#1A365D;" value="&lt;b&gt;SISTEMA MATIENSOS — CASO DE USO CU-03&lt;/b&gt;&lt;br&gt;Análisis del Producto Más Vendido" vertex="1">
+          <mxGeometry height="40" width="600" x="60" y="25" as="geometry" />
+        </mxCell>
+        <mxCell id="boundary" parent="1" style="shape=rect;html=1;verticalAlign=top;align=center;dashed=1;dashPattern=8 4;strokeWidth=2;fillColor=#F8FAFC;strokeColor=#475569;fontStyle=1;fontSize=13;fontColor=#334155;rounded=1;arcSize=4;" value="Sistema Matiensos — Módulo de Consultas y Reportes" vertex="1">
+          <mxGeometry height="310" width="560" x="220" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="actor_mkt" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#DBEAFE;strokeColor=#2563EB;strokeWidth=2;fontSize=12;fontColor=#1E293B;" value="Responsable de&lt;br&gt;&lt;b&gt;Marketing / Ventas&lt;/b&gt;" vertex="1">
+          <mxGeometry height="85" width="45" x="80" y="185" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_principal" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#2563EB;strokeWidth=2;fontSize=12;fontColor=#1E3A8A;fontStyle=0;" value="&lt;b&gt;CU-03&lt;/b&gt;&lt;br&gt;Analizar&lt;br&gt;Producto Más Vendido" vertex="1">
+          <mxGeometry height="80" width="180" x="260" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_sub_top1" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#F1F5F9;strokeColor=#64748B;strokeWidth=1.5;fontSize=11;fontColor=#334155;" value="&lt;i&gt;Determinar Mejor venta&lt;/i&gt;&lt;br&gt;(Subconsulta TOP 1&lt;br&gt;por Unidades Históricas)" vertex="1">
+          <mxGeometry height="70" width="190" x="540" y="115" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_sub_group" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#F1F5F9;strokeColor=#64748B;strokeWidth=1.5;fontSize=11;fontColor=#334155;" value="&lt;i&gt;Consolidar Unidades y Gasto&lt;/i&gt;&lt;br&gt;(Agrupación por Cliente&lt;br&gt;+ Filtro HAVING)" vertex="1">
+          <mxGeometry height="70" width="190" x="540" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_actor" edge="1" parent="1" source="actor_mkt" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=2;strokeColor=#2563EB;endArrow=none;" target="uc_principal">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_inc1" edge="1" parent="1" source="uc_principal" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;strokeWidth=1.5;strokeColor=#64748B;endArrow=open;endSize=8;fontSize=11;fontColor=#475569;" target="uc_sub_top1" value="&amp;laquo;include&amp;raquo;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_inc2" edge="1" parent="1" source="uc_principal" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;strokeWidth=1.5;strokeColor=#64748B;endArrow=open;endSize=8;fontSize=11;fontColor=#475569;" target="uc_sub_group" value="&amp;laquo;include&amp;raquo;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ficha_header" parent="1" style="rounded=1;arcSize=6;whiteSpace=wrap;html=1;fillColor=#1E3A8A;strokeColor=#1E3A8A;fontColor=#FFFFFF;fontSize=13;fontStyle=1;align=center;" value="&lt;b&gt;ESPECIFICACIÓN DE CASO DE USO: CU-03&lt;/b&gt;" vertex="1">
+          <mxGeometry height="35" width="720" x="60" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="f1_k" parent="1" style="shape=rect;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#334155;align=left;spacingLeft=10;fontSize=11;" value="&lt;b&gt;Nombre / Código&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="160" x="60" y="455" as="geometry" />
+        </mxCell>
+        <mxCell id="f1_v" parent="1" style="shape=rect;html=1;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontColor=#0F172A;align=left;spacingLeft=10;fontSize=11;" value="CU-03: Análisis del Producto Más Vendido" vertex="1">
+          <mxGeometry height="30" width="560" x="220" y="455" as="geometry" />
+        </mxCell>
+        <mxCell id="f2_k" parent="1" style="shape=rect;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#334155;align=left;spacingLeft=10;fontSize=11;" value="&lt;b&gt;Actor Principal&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="160" x="60" y="485" as="geometry" />
+        </mxCell>
+        <mxCell id="f2_v" parent="1" style="shape=rect;html=1;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontColor=#0F172A;align=left;spacingLeft=10;fontSize=11;" value="Responsable de Marketing / Ventas (Área Comercial de Matiensos)" vertex="1">
+          <mxGeometry height="30" width="560" x="220" y="485" as="geometry" />
+        </mxCell>
+        <mxCell id="f3_k" parent="1" style="shape=rect;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#334155;align=left;spacingLeft=10;fontSize=11;" value="&lt;b&gt;Propósito / Objetivo&lt;/b&gt;" vertex="1">
+          <mxGeometry height="45" width="160" x="60" y="515" as="geometry" />
+        </mxCell>
+        <mxCell id="f3_v" parent="1" style="shape=rect;html=1;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontColor=#0F172A;align=left;spacingLeft=10;fontSize=11;whiteSpace=wrap;" value="Obtener el padrón nominal de clientes con su correo electrónico, unidades adquiridas y monto total invertido en el artículo con mayor volumen físico de ventas de la historia, facilitando campañas de cross-selling y fidelización." vertex="1">
+          <mxGeometry height="45" width="560" x="220" y="515" as="geometry" />
+        </mxCell>
+        <mxCell id="f4_k" parent="1" style="shape=rect;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#334155;align=left;spacingLeft=10;fontSize=11;" value="&lt;b&gt;Precondiciones&lt;/b&gt;" vertex="1">
+          <mxGeometry height="35" width="160" x="60" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="f4_v" parent="1" style="shape=rect;html=1;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontColor=#0F172A;align=left;spacingLeft=10;fontSize=11;whiteSpace=wrap;" value="Existen ventas cerradas con renglones en DetalleVenta. Los clientes están dados de alta como Persona con dirección de correo registrada." vertex="1">
+          <mxGeometry height="35" width="560" x="220" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="f5_k" parent="1" style="shape=rect;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#334155;align=left;spacingLeft=10;fontSize=11;" value="&lt;b&gt;Tablas Vinculadas&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="160" x="60" y="595" as="geometry" />
+        </mxCell>
+        <mxCell id="f5_v" parent="1" style="shape=rect;html=1;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontColor=#0F172A;align=left;spacingLeft=10;fontSize=11;" value="5 tablas vía INNER JOIN: Persona, Cliente, Venta, DetalleVenta, Producto." vertex="1">
+          <mxGeometry height="30" width="560" x="220" y="595" as="geometry" />
+        </mxCell>
+        <mxCell id="f6_k" parent="1" style="shape=rect;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#334155;align=left;spacingLeft=10;fontSize=11;" value="&lt;b&gt;Estrategia Técnica SQL&lt;/b&gt;" vertex="1">
+          <mxGeometry height="40" width="160" x="60" y="625" as="geometry" />
+        </mxCell>
+        <mxCell id="f6_v" parent="1" style="shape=rect;html=1;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontColor=#0F172A;align=left;spacingLeft=10;fontSize=11;whiteSpace=wrap;" value="Subconsulta analítica TOP 1 por SUM(cantidad) en WHERE para no hardcodear artículos + HAVING SUM(cantidad) &amp;gt;= 1 + ORDER BY unidades y total invertido." vertex="1">
+          <mxGeometry height="40" width="560" x="220" y="625" as="geometry" />
+        </mxCell>
+        <mxCell id="f7_k" parent="1" style="shape=rect;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#334155;align=left;spacingLeft=10;fontSize=11;rounded=1;arcSize=6;" value="&lt;b&gt;Postcondiciones&lt;/b&gt;" vertex="1">
+          <mxGeometry height="35" width="160" x="60" y="665" as="geometry" />
+        </mxCell>
+        <mxCell id="f7_v" parent="1" style="shape=rect;html=1;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontColor=#0F172A;align=left;spacingLeft=10;fontSize=11;whiteSpace=wrap;rounded=1;arcSize=2;" value="Entrega de lista ordenada de clientes (ID, Nombre, Email, Unidades, Total Invertido) lista para campañas de fidelización o aviso de reposición." vertex="1">
+          <mxGeometry height="35" width="560" x="220" y="665" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
