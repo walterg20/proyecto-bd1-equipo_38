@@ -28,7 +28,11 @@ BEGIN
     -- Asignación aleatoria basada en tus datos reales
     SET @id_medio_pago = ABS(CHECKSUM(NEWID())) % 3 + 1;         -- IDs: 1, 2, 3
     SET @id_persona_usuario = ABS(CHECKSUM(NEWID())) % 3 + 1;   -- IDs: 1, 2, 3
-    SET @id_persona_cliente = ABS(CHECKSUM(NEWID())) % 7 + 10;  -- IDs: 10 al 16
+    -- Clientes reales (4 al 8) o Consumidor Final
+    IF (ABS(CHECKSUM(NEWID())) % 10) < 7
+        SET @id_persona_cliente = ABS(CHECKSUM(NEWID())) % 5 + 4; -- IDs: 4, 5, 6, 7 u 8
+    ELSE
+        SET @id_persona_cliente = NULL;   -- Consumidor Final
     
     -- Fecha aleatoria dentro de los últimos 60 días
     SET @fecha_hora = DATEADD(MINUTE, (ABS(CHECKSUM(NEWID())) % 86400) * -1, GETDATE());
@@ -61,11 +65,11 @@ BEGIN
     -- NOTA: Si implementaste el segundo trigger (tr_DetalleVenta_ActualizarTotal), 
     -- el total_venta se actualizará solo automáticamente aquí. 
     -- Si no lo pusiste, puedes descomentar las siguientes líneas:
-    /*
+    
     DECLARE @TotalVenta DECIMAL(18,2);
     SELECT @TotalVenta = SUM(precio * cantidad) FROM @ProdSeleccionados;
     UPDATE Venta SET total_venta = @TotalVenta WHERE id_venta = @id_venta_generada;
-    */
+    
 
     SET @VentaId = @VentaId + 1;
 END;
