@@ -96,7 +96,7 @@ GO
 
 
 /* ==========================================================================================
-   CONSULTA 3: Análisis de Penetración del Producto Más Vendido 
+   CONSULTA 3: Análisis del Producto Más Vendido 
   
    Determinar qué clientes compraron el producto más vendido en unidades físicas en la historia 
    de Matiensos.
@@ -131,7 +131,7 @@ GROUP BY
     p.nombre, 
     p.correo, 
     pr.nombre
-HAVING SUM(dv.cantidad) >= 1
+HAVING SUM(dv.cantidad) >= 2
 ORDER BY unidades_adquiridas DESC, total_invertido_en_producto DESC;
 GO
 

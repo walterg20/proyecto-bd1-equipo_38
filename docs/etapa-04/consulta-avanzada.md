@@ -36,15 +36,15 @@ Analizar el comportamiento de los clientes que compran artículos cuyo precio su
 - **Filtro HAVING:** Aplica `COUNT(DISTINCT v.id_venta) >= 1` y `SUM(dv.cantidad * dv.precio_congelado) > 50000.00`, asegurando que solo aparezcan clientes con un volumen monetario significativo en este segmento de precios elevados.
 ---
 
-### Consulta 3: Análisis de Penetración del Producto Más Vendido
+### Consulta 3: Análisis del Producto Más Vendido
 
 #### A. Problema de Negocio
-Determinar qué clientes compraron el producto más vendido en unidades físicas en la historia de Matiensos, evaluando la magnitud de su demanda y el total económico que cada cliente aportó a dicho producto líder.
+Determinar qué clientes compraron el producto más vendido en unidades físicas en la historia de Matiensos, evaluando la magnitud de su demanda y el total económico que cada cliente aportó a dicho producto líder, focalizando en aquellos con adquisiciones relevantes (al menos 2 unidades).
 
 #### B. Justificación Técnica
 - **Tablas vinculadas (5 tablas):** `Cliente`, `Persona`, `Venta`, `DetalleVenta`, `Producto`.
 - **Subconsulta TOP 1 en WHERE:** Mediante `WHERE pr.id_producto = (SELECT TOP 1 dv_top.id_producto FROM DetalleVenta dv_top GROUP BY dv_top.id_producto ORDER BY SUM(dv_top.cantidad) DESC)`, la consulta no requiere valores fijos codificados ("hardcoded"), sino que calcula de forma dinámica cuál es el artículo líder en ventas de todo el historial.
-- **Filtro HAVING:** Asegura la correcta agrupación y filtra clientes que hayan comprado al menos 1 unidad (`SUM(dv.cantidad) >= 1`).
+- **Filtro HAVING:** Asegura la correcta agrupación y filtra clientes que hayan comprado al menos 2 unidades (`SUM(dv.cantidad) >= 2`), identificando compradores recurrentes o por volumen del producto líder.
 ---
 
 ## 3. Resumen de Cumplimiento de Criterios
@@ -53,4 +53,4 @@ Determinar qué clientes compraron el producto más vendido en unidades físicas
 | :--- | :--- | :--- | :--- | :--- |
 | **Consulta 1** | 5 tablas (`Persona`, `Cliente`, `Venta`, `DetalleVenta`, `Producto`) | Sí | `HAVING` + Subconsulta escalar (`AVG`) | Detección de clientes con gasto acumulado superior a la media general. |
 | **Consulta 2** | 5 tablas (`Persona`, `Cliente`, `Venta`, `DetalleVenta`, `Producto`) | Sí | `WHERE` + Subconsulta escalar (`AVG`) + `HAVING` | Identificación de compradores de artículos con precios por encima del promedio del catálogo (> $50.000). |
-| **Consulta 3** | 5 tablas (`Persona`, `Cliente`, `Venta`, `DetalleVenta`, `Producto`) | Sí | `WHERE` + Subconsulta analítica (`TOP 1`) + `HAVING` | Análisis de clientes y facturación asociados al producto con mayor volumen histórico de ventas. |
+| **Consulta 3** | 5 tablas (`Persona`, `Cliente`, `Venta`, `DetalleVenta`, `Producto`) | Sí | `WHERE` + Subconsulta analítica (`TOP 1`) + `HAVING` | Análisis de clientes y facturación asociados al producto con mayor volumen histórico de ventas (al menos 2 unidades). |
