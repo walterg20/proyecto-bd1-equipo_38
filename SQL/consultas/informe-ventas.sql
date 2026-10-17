@@ -1,0 +1,1 @@
+Consultas: recuperación y análisis de información mediante SELECT, incluyendo JOIN, GROUP BY, HAVING, subconsultas, etc.
