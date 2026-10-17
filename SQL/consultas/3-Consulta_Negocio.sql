@@ -130,3 +130,54 @@ GROUP BY
 HAVING SUM(dv.cantidad) >= 1
 ORDER BY unidades_adquiridas DESC, total_invertido_en_producto DESC;
 GO
+
+/* ==========================================================================================
+   CONSULTA 4: Desempeño Comercial por Rol, Categoría y Medio de Pago
+   ------------------------------------------------------------------------------------------
+   Analizar la recaudación y el volumen de ventas cruzando el Rol del empleado que facturó, 
+   la Categoría del artículo matero vendido y el Medio de Pago utilizado por el cliente. 
+   Se filtran únicamente aquellas combinaciones cuya recaudación total supere el 
+   ticket promedio general histórico de la tienda, identificando así los flujos de 
+   ingreso más fuertes del negocio.
+   ========================================================================================== */
+
+SELECT 
+    r.nombre AS rol_empleado,
+    CONCAT(p.apellido, ', ', p.nombre) AS empleado,
+    c.nombre AS categoria_producto,
+    mp.tipo AS medio_pago,
+    COUNT(DISTINCT v.id_venta) AS cantidad_operaciones,
+    SUM(dv.cantidad) AS articulos_vendidos,
+    SUM(dv.cantidad * dv.precio_congelado) AS recaudacion_total
+FROM Venta v
+-- Unimos con Usuario, Persona y Rol para saber quién lo vendió y qué cargo tiene
+INNER JOIN Usuario u 
+    ON v.id_persona_usuario = u.id_persona_usuario
+INNER JOIN Persona p 
+    ON u.id_persona_usuario = p.id_persona
+INNER JOIN Rol r 
+    ON u.id_rol = r.id_rol
+-- Unimos con Medio de Pago
+INNER JOIN MedioPago mp 
+    ON v.id_medio_pago = mp.id_medio_pago
+-- Unimos el Detalle, Producto y Categoría para saber qué se vendió
+INNER JOIN DetalleVenta dv 
+    ON v.id_venta = dv.id_venta
+INNER JOIN Producto pr 
+    ON dv.id_producto = pr.id_producto
+INNER JOIN Categoria c 
+    ON pr.id_categoria = c.id_categoria
+GROUP BY 
+    r.nombre,
+    p.apellido,
+    p.nombre,
+    c.nombre,
+    mp.tipo
+HAVING 
+    SUM(dv.cantidad * dv.precio_congelado) > (
+        -- Subconsulta: Calcula el valor del ticket promedio general de la tienda
+        SELECT AVG(total_venta) FROM Venta
+    )
+ORDER BY 
+    recaudacion_total DESC;
+GO
