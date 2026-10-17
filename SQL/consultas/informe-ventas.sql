@@ -8,9 +8,9 @@ GO
 -- Rango de análisis: [@FechaDesde, @FechaHasta)
 DECLARE @FechaDesde DATETIME = '2026-09-01 00:00:00';
 DECLARE @FechaHasta DATETIME = '2026-10-01 00:00:00';
-
+/* ó
 SET @FechaDesde = DATEADD(DAY, -60, GETDATE());
-SET @FechaHasta = DATEADD(DAY, 1, GETDATE());
+SET @FechaHasta = DATEADD(DAY, 1, GETDATE());*/
 
 
 -- =============================================================================

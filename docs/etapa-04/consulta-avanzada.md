@@ -1,4 +1,4 @@
-# Caso — Consultas de Negocios Avanzadas
+# Caso 3 — Consultas de Negocios Avanzadas
 ---
 
 ## 1. Introducción y Contexto
