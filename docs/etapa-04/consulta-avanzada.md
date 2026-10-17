@@ -1,10 +1,4 @@
-# Etapa 04 — Consultas de Negocios Avanzadas
-
-**Asignatura:** Base de Datos I  
-**Equipo:** 38  
-**Proyecto:** Matiensos  
-**Año:** 2026  
-
+# Caso — Consultas de Negocios Avanzadas
 ---
 
 ## 1. Introducción y Contexto

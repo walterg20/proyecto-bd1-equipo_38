@@ -1,5 +1,4 @@
-# Etapa IV: Consultas y Casos de Uso
-## Caso 2: Reporte Agregado de Ventas en Rango de Fechas
+# Caso: Reporte Agregado de Ventas en Rango de Fechas
 
 ### 1. Descripción de la Necesidad de Negocio
 Para la administración de la tienda comercial **"Matiensos"**, conocer el volumen global de facturación no es suficiente; resulta estratégico identificar qué familias de productos materos (Mates, Bombillas, Termos) impulsan las ventas y generan mayor rentabilidad en períodos determinados.
@@ -9,7 +8,6 @@ Este reporte permite al equipo directivo:
 - Medir la rotación física de mercadería.
 - Detectar la presencia de cada categoría en las órdenes de compra.
 
----
 
 ### 2. Estructura de la Consulta y Tablas Involucradas
 
