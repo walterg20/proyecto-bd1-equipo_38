@@ -46,7 +46,16 @@ Determinar qué clientes compraron el producto más vendido en unidades físicas
 - **Subconsulta TOP 1 en WHERE:** Mediante `WHERE pr.id_producto = (SELECT TOP 1 dv_top.id_producto FROM DetalleVenta dv_top GROUP BY dv_top.id_producto ORDER BY SUM(dv_top.cantidad) DESC)`, la consulta no requiere valores fijos codificados ("hardcoded"), sino que calcula de forma dinámica cuál es el artículo líder en ventas de todo el historial.
 - **Filtro HAVING:** Asegura la correcta agrupación y filtra clientes que hayan comprado al menos 2 unidades (`SUM(dv.cantidad) >= 2`), identificando compradores recurrentes o por volumen del producto líder.
 ---
+### Consulta 4: Desempeño Comercial por Rol, Categoría y Medio de Pago
 
+#### A. Problema de Negocio
+Analizar la recaudación y el volumen de ventas cruzando el Rol del empleado que facturó, la Categoría del artículo matero vendido y el Medio de Pago utilizado. El objetivo es identificar qué combinaciones de estas variables generan ingresos que superan el ticket promedio histórico de la tienda, permitiendo a la gerencia optimizar los métodos de cobro y evaluar qué perfiles de empleados venden mejor los rubros más fuertes.
+
+#### B. Justificación Técnica
+- **Tablas vinculadas (8 tablas):** `Venta`, `Usuario`, `Persona`, `Rol`, `MedioPago`, `DetalleVenta`, `Producto`, `Categoria`.
+- **Cláusula JOIN:** Integra las transacciones (`Venta`, `DetalleVenta`, `MedioPago`), la clasificación del artículo (`Producto`, `Categoria`) y el perfil del empleado responsable de la operación (`Usuario`, `Persona`, `Rol`), aportando una visión complementaria al análisis del cliente.
+- **Filtro HAVING y Subconsulta:** Aplica `HAVING SUM(dv.cantidad * dv.precio_congelado) > (SELECT AVG(total_venta) FROM Venta)` para filtrar dinámicamente y mostrar solo aquellas agrupaciones operativas que superan el valor del ticket promedio general del local.
+---
 ## 3. Resumen de Cumplimiento de Criterios
 
 | Consulta | Tablas en JOIN (Mín. 3) | Uso de Cliente, Venta, DetalleVenta y Producto | Filtro Condicional Aplicado | Finalidad de Negocio |
@@ -54,3 +63,4 @@ Determinar qué clientes compraron el producto más vendido en unidades físicas
 | **Consulta 1** | 5 tablas (`Persona`, `Cliente`, `Venta`, `DetalleVenta`, `Producto`) | Sí | `HAVING` + Subconsulta escalar (`AVG`) | Detección de clientes con gasto acumulado superior a la media general. |
 | **Consulta 2** | 5 tablas (`Persona`, `Cliente`, `Venta`, `DetalleVenta`, `Producto`) | Sí | `WHERE` + Subconsulta escalar (`AVG`) + `HAVING` | Identificación de compradores de artículos con precios por encima del promedio del catálogo (> $50.000). |
 | **Consulta 3** | 5 tablas (`Persona`, `Cliente`, `Venta`, `DetalleVenta`, `Producto`) | Sí | `WHERE` + Subconsulta analítica (`TOP 1`) + `HAVING` | Análisis de clientes y facturación asociados al producto con mayor volumen histórico de ventas (al menos 2 unidades). |
+| **Consulta 4** | 8 tablas (`Venta`, `Usuario`, `Persona`, `Rol`, `MedioPago`, `DetalleVenta`, `Producto`, `Categoria`) | Sí (Enfoque interno) | `HAVING` + Subconsulta escalar (`AVG`) | Identificación de combinaciones operativas (rol, categoría, pago) que superan el ticket promedio histórico. |
