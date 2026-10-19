@@ -62,10 +62,9 @@ BEGIN
     SELECT @id_venta_generada, id_producto, precio, cantidad
     FROM @ProdSeleccionados;
 
-    -- NOTA: Si implementaste el segundo trigger (tr_DetalleVenta_ActualizarTotal), 
-    -- el total_venta se actualizará solo automáticamente aquí. 
-    -- Si no lo pusiste, puedes descomentar las siguientes líneas:
-    
+    -- NOTA: Con el trigger 'tr_DetalleVenta_ActualizarTotal' activo en DetalleVenta, 
+    -- el total_venta se actualiza de manera automática al insertar los detalles.
+    -- Se mantiene el bloque siguiente como respaldo / fallback:
     DECLARE @TotalVenta DECIMAL(18,2);
     SELECT @TotalVenta = SUM(precio * cantidad) FROM @ProdSeleccionados;
     UPDATE Venta SET total_venta = @TotalVenta WHERE id_venta = @id_venta_generada;
