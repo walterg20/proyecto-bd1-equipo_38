@@ -3,7 +3,7 @@ GO
 
 /* =============================================================================
     TEMA 1: FUNCIONES ALMACENADAS
-    Objeto: dbo.fn_CalcularDescuentoCliente
+    Script: dbo.fn_CalcularDescuentoCliente
     Función escalar que calcula el porcentaje de descuento comercial
     aplicable a un cliente en función de su histórico de compras acumuladas.
    ============================================================================= */

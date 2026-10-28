@@ -49,7 +49,25 @@ GROUP BY c.id_persona_cliente, p.nombre, p.apellido;
 ```
 
 ### Resultados Obtenidos
-id_cliente	cliente	            total_gastado_historico	descuento_aplicable
-4	        Juan Pérez	        $ 640.000,00	        0.10 (10%)
-5	        María López	        $ 285.000,00	        0.05 (5%)
-6	        Carlos Rodríguez    $ 95.000,00	            0.00 (0%)
+| id_cliente | cliente | total_gastado_historico | descuento_aplicable |
+| :---: | :--- | :---: | :---: |
+| **4** | Juan Pérez | $ 640.000,00 | **0.10 (10%)** |
+| **5** | María López | $ 285.000,00 | **0.05 (5%)** |
+| **6** | Carlos Rodríguez | $ 95.000,00 | **0.00 (0%)** |
+
+### Demostración Procedimiento Almacenado
+```sql
+DECLARE @IdNuevaVenta INT;
+
+-- Ejecuta la venta de 1 Mate Imperial (id_producto = 1) para el cliente 4 atendido por el vendedor 2
+EXEC dbo.sp_RegistrarVentaCompleta
+    @id_persona_usuario = 2,
+    @id_persona_cliente = 4,
+    @id_medio_pago = 1,
+    @id_producto = 1,
+    @cantidad = 1,
+    @id_venta_generada = @IdNuevaVenta OUTPUT;
+
+-- Verifica el comprobante emitido
+SELECT * FROM Venta WHERE id_venta = @IdNuevaVenta;
+```

@@ -3,7 +3,7 @@ GO
 
 /* =============================================================================
     TEMA 1: PROCEDIMIENTOS ALMACENADOS
-    Objeto: dbo.sp_RegistrarVentaCompleta
+    Script: dbo.sp_RegistrarVentaCompleta
     Procedimiento almacenado que encapsula la emisión integral de una
     venta en mostrador, calculando descuentos y congelando precios.
    ============================================================================= */
