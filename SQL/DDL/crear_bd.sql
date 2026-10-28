@@ -114,7 +114,7 @@ CREATE TABLE producto_proveedor(
 /* TABLE: Venta */
 
 CREATE TABLE Venta (
-	id_venta int NOT NULL,
+	id_venta int IDENTITY(1,1) NOT NULL,
 	fecha_hora DATETIME NOT NULL,
 	total_venta DECIMAL(10,2)  NOT NULL,
 	id_medio_pago int NOT NULL,
