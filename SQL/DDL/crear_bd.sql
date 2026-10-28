@@ -24,22 +24,22 @@ CREATE TABLE Persona
 */
 CREATE TABLE Categoria
 (
-id_categoria INT NOT NULL,
-nombre VARCHAR(100) NOT NULL,
-descripcion VARCHAR (100) NOT NULL,
-CONSTRAINT Pk_Categoria PRIMARY KEY (id_categoria),
-CONSTRAINT UQ_Categoria_nombre UNIQUE (nombre),
+    id_categoria INT NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion VARCHAR (100) NOT NULL,
+    CONSTRAINT Pk_Categoria PRIMARY KEY (id_categoria),
+    CONSTRAINT UQ_Categoria_nombre UNIQUE (nombre),
 );
 
 /* TABLA: Rol
 */
 CREATE TABLE Rol
 (
-id_rol INT NOT NULL,
-nombre VARCHAR(50) NOT NULL,
-descripcion VARCHAR(255) NULL,
-CONSTRAINT PK_Rol PRIMARY KEY (id_rol),
-CONSTRAINT UQ_Rol_nombre UNIQUE (nombre),
+    id_rol INT NOT NULL,
+    nombre VARCHAR(50) NOT NULL,
+    descripcion VARCHAR(255) NULL,
+    CONSTRAINT PK_Rol PRIMARY KEY (id_rol),
+    CONSTRAINT UQ_Rol_nombre UNIQUE (nombre),
 );
 
 /* TABLA: medio_pago
@@ -80,38 +80,38 @@ CREATE TABLE Cliente
 
 /* TABLA: proveedor */
 CREATE TABLE proveedor(
-id_proveedor INT IDENTITY (1,1) NOT NULL,
-cuit VARCHAR(13) NOT NULL,
-razon_social VARCHAR(150) NOT NULL,
-telefono VARCHAR(12) NULL,
-CONSTRAINT PK_PROVEEDOR PRIMARY KEY (id_proveedor),
-CONSTRAINT UQ_PROVEEDOR_CUIT UNIQUE (cuit)
+    id_proveedor INT IDENTITY (1,1) NOT NULL,
+    cuit VARCHAR(13) NOT NULL,
+    razon_social VARCHAR(150) NOT NULL,
+    telefono VARCHAR(12) NULL,
+    CONSTRAINT PK_PROVEEDOR PRIMARY KEY (id_proveedor),
+    CONSTRAINT UQ_PROVEEDOR_CUIT UNIQUE (cuit)
 );
 
 /* TABLA: producto */
 CREATE TABLE producto(
-id_producto INT IDENTITY(1,1) NOT NULL,
-nombre VARCHAR(150) NOT NULL,
-stock_actual INT NOT NULL,
-precio DECIMAL(10,2) NOT NULL,
-esta_activo CHAR(1) NOT NULL DEFAULT '1',
-id_categoria INT NOT NULL,
-CONSTRAINT PK_PRODUCTO PRIMARY KEY (id_producto),
-CONSTRAINT FK_PRODUCTO_CATEGORIA FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria)
+    id_producto INT IDENTITY(1,1) NOT NULL,
+    nombre VARCHAR(150) NOT NULL,
+    stock_actual INT NOT NULL,
+    precio DECIMAL(10,2) NOT NULL,
+    esta_activo CHAR(1) NOT NULL DEFAULT '1',
+    id_categoria INT NOT NULL,
+    CONSTRAINT PK_PRODUCTO PRIMARY KEY (id_producto),
+    CONSTRAINT FK_PRODUCTO_CATEGORIA FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria)
 );
 
 /* TABLA: producto_proveedor */
 CREATE TABLE producto_proveedor(
-id_producto INT NOT NULL,
-id_proveedor INT NOT NULL,
-fecha DATE NOT NULL DEFAULT GETDATE(),
-cantidad INT NOT NULL,
-CONSTRAINT PK_PRODUCTO_PROVEEDOR PRIMARY KEY (id_producto, id_proveedor),
-CONSTRAINT FK_PRODPROV_PRODUCTO FOREIGN KEY (id_producto) REFERENCES producto(id_producto),
-CONSTRAINT FK_PRODPROV_PROVEEDOR FOREIGN KEY (id_proveedor) REFERENCES proveedor(id_proveedor)
+    id_producto INT NOT NULL,
+    id_proveedor INT NOT NULL,
+    fecha DATE NOT NULL DEFAULT GETDATE(),
+    cantidad INT NOT NULL,
+    CONSTRAINT PK_PRODUCTO_PROVEEDOR PRIMARY KEY (id_producto, id_proveedor),
+    CONSTRAINT FK_PRODPROV_PRODUCTO FOREIGN KEY (id_producto) REFERENCES producto(id_producto),
+    CONSTRAINT FK_PRODPROV_PROVEEDOR FOREIGN KEY (id_proveedor) REFERENCES proveedor(id_proveedor)
 );
 
---Crear TABLE Venta
+/* TABLE: Venta */
 
 CREATE TABLE Venta (
 	id_venta int NOT NULL,
@@ -121,7 +121,8 @@ CREATE TABLE Venta (
 	id_persona_usuario int NOT NULL,
 	id_persona_cliente int NOT NULL
 )
---Crear TABLE Detalle_Venta
+
+/* TABLE: Detalle_Venta */
 
 CREATE TABLE DetalleVenta(
 	id_venta int NOT NULL,
