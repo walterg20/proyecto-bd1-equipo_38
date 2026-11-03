@@ -1,11 +1,6 @@
 USE sistema_matiensos;
 GO
 
--- =========================================================================
--- SCRIPT DE PRUEBA: Procedimiento sp_RegistrarVenta
--- Demuestra el comportamiento transaccional ACID ante operaciones válidas
--- y ante intentos de violación de reglas de negocio (Stock insuficiente).
--- =========================================================================
 
 PRINT '==================================================';
 PRINT 'CASO 1: VENTA EXITOSA CON CLIENTE NOMINADO';
@@ -68,7 +63,7 @@ BEGIN TRY
     EXEC sp_RegistrarVenta
         @id_medio_pago      = 1,
         @id_persona_usuario = 1,
-        @id_persona_cliente = 4,
+        @id_persona_cliente = 10,
         @id_venta_generada  = @IdVentaFallida OUTPUT;
 
     PRINT 'ERROR: La venta no debió procesarse.';
