@@ -56,7 +56,7 @@ Se demuestra en tres partes:
 
 ## 4. Implementación en SQL Server Express
 
-> **Script completo en el repositorio:** [`sql/ddl/seguridad_usuarios_roles.sql`](../../sql/ddl/seguridad_usuarios_roles.sql)
+> **Script completo en el repositorio:** [`sql/tecnico/seguridad/Seguridad.sql`](../../sql/tecnico/seguridad/prueba_seguridad.sql)
 
 ### Parte 1 — Permisos a nivel de usuarios
 
@@ -174,7 +174,7 @@ Una duda técnica frecuente es:
 
 ## 5. Script de Demostración y Resultados Obtenidos
 
-> **Script ejecutable de pruebas:** [`sql/dml/test_seguridad.sql`](../../sql/dml/test_seguridad.sql)
+> **Script ejecutable de pruebas:** [`sql/tecnico/seguradiad/prueba_seguridad.sql`](../../sql/tecnico/seguridad/prueba_seguridad.sql)
 
 Mediante la instrucción `EXECUTE AS USER = '...'` de SQL Server, podemos simular la sesión de cada usuario y verificar el comportamiento del motor ante operaciones autorizadas y no autorizadas:
 
