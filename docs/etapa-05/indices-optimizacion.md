@@ -1,0 +1,1 @@
+etapa-05 (Temas técnicos): Para qué se utiliza cada mecanismo, por qué fue elegido, cómo se integra al sistema y cómo se demuestra su funcionamiento.

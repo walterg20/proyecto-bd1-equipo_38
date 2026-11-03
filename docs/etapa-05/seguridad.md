@@ -43,18 +43,16 @@ Este procedimiento valida el carrito cargado en `#DetalleTemp`, verifica que los
 Se demuestra en tres partes:
 1. **Permisos asignados directamente a usuarios** (`usuario_admin` y `usuario_lector`).
 2. **Permisos asignados mediante roles personalizados** (`rol_vendedor` y `usuario_vendedor`).
-3. **Diferencia práctica entre ejecutar una sentencia SQL directa (`INSERT`/`UPDATE`) y utilizar un procedimiento almacenado (`EXEC dbo.sp_RegistrarVenta`)** aprovechando el mecanismo de **Encadenamiento de Propiedad (*Ownership Chaining*)** de SQL Server.
+3. **Diferencia práctica entre ejecutar una sentencia SQL directa (`INSERT`/`UPDATE`) y utilizar un procedimiento almacenado (`EXEC dbo.sp_RegistrarVenta`)** aprovechando el mecanismo de **Encadenamiento de Propiedad** de SQL Server.
 
 ### Matriz de Diseño de Seguridad
 
-| Entidad de Seguridad | Tipo / Nivel | Asignación | Permisos Efectivos en `sistema_matiensos` |
-| :--- | :--- | :--- | :--- |
-| **`usuario_admin`** | Usuario (Rol fijo `db_owner`) | Rol de BD | Control total (DDL, DML y DCL) sobre toda la base de datos. |
-| **`usuario_lector`** | Usuario (Permiso directo) | Directa al usuario | `GRANT SELECT` en esquema `dbo`, con `DENY SELECT` explícito sobre la columna `Usuario(contraseña)`. Sin permisos de escritura ni ejecución de SP. |
-| **`rol_vendedor`** | Rol personalizado de BD | Rol propio | `GRANT SELECT` en catálogos y comprobantes (`Producto`, `Categoria`, `MedioPago`, `Cliente`, `Persona`, `Venta`, `DetalleVenta`). `DENY SELECT` en tablas internas (`Usuario`, `Rol`, `Proveedor`, `ProductoProveedor`). `GRANT EXECUTE` sobre `dbo.sp_RegistrarVenta`. **Sin permisos `INSERT`/`UPDATE`/`DELETE` directos.** |
-| **`usuario_vendedor`** | Usuario miembro de `rol_vendedor` | Heredado del rol | Hereda todos los permisos y restricciones de `rol_vendedor`. |
+| Entidad de Seguridad   | Tipo / Nivel                      | Asignación         | Permisos Efectivos en `sistema_matiensos`                   |
+| **`usuario_admin`**    | Usuario (Rol fijo `db_owner`)     | Rol de BD          | Control total (DDL, DML y DCL) sobre toda la base de datos. |
+| **`usuario_lector`**   | Usuario (Permiso directo)         | Directa al usuario | `GRANT SELECT` en esquema `dbo`, con `DENY SELECT` explícito sobre la columna `Usuario(contraseña)`. Sin permisos de escritura ni ejecución de SP.  |
+| **`rol_vendedor`**     | Rol personalizado de BD           | Rol propio         | `GRANT SELECT` en catálogos y comprobantes (`Producto`, `Categoria`, `MedioPago`, `Cliente`, `Persona`, `Venta`, `DetalleVenta`). `DENY SELECT` en tablas internas (`Usuario`, `Rol`, `Proveedor`, `ProductoProveedor`). `GRANT EXECUTE` sobre `dbo.sp_RegistrarVenta`. **Sin permisos `INSERT`/`UPDATE`/`DELETE` directos.** |
+| **`usuario_vendedor`** | Usuario miembro de `rol_vendedor` | Heredado del rol   | Hereda todos los permisos y restricciones de `rol_vendedor`. |
 
----
 
 ## 4. Implementación en SQL Server Express
 
@@ -108,7 +106,7 @@ GO
 
 ### Parte 2 — Permisos a nivel de roles personalizados (`rol_vendedor`)
 
-En un entorno real, una tienda cuenta con varios cajeros/vendedores (por ejemplo, *Sofía Gómez* y *Mateo Benítez* en nuestra tabla `Usuario`). Administrar permisos individualmente es propenso a errores; por ello, se crea el rol `rol_vendedor`.
+En un entorno real, una tienda cuenta con varios cajeros/vendedores . Administrar permisos individualmente es propenso a errores; por ello, se crea el rol `rol_vendedor`.
 
 #### 2.1. Creación del rol y del usuario vendedor
 ```sql
@@ -128,7 +126,7 @@ GO
 ```
 
 #### 2.2. Asignación de permisos al rol `rol_vendedor`
-El vendedor necesita consultar el catálogo de mates/termos/bombillas, medios de pago, clientes y comprobantes emitidos, y necesita **ejecutar** el procedimiento de registro de ventas, pero **no debe tener permisos para modificar tablas directamente**:
+El vendedor necesita consultar el catálogo de producto, medios de pago, clientes y comprobantes emitidos, y necesita **ejecutar** el procedimiento de registro de ventas, pero **no debe tener permisos para modificar tablas directamente**:
 
 ```sql
 -- 1. Lectura habilitada únicamente sobre tablas operativas de mostrador
@@ -162,7 +160,7 @@ GO
 
 ### Parte 3 — Diferencia entre Sentencia SQL Directa y Procedimiento Almacenado
 
-#### ¿Cómo funciona el Encadenamiento de Propiedad (*Ownership Chaining*)?
+#### ¿Cómo funciona el Encadenamiento de Propiedad?
 Una duda técnica frecuente es:
 > *"Si `usuario_vendedor` NO tiene permiso `INSERT` en `Venta` ni `UPDATE` en `Producto`, ¿por qué cuando ejecuta `EXEC dbo.sp_RegistrarVenta` la venta se inserta y el stock se descuenta sin dar error de permisos?"*
 
