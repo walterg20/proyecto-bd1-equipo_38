@@ -56,7 +56,7 @@ Se demuestra en tres partes:
 
 ## 4. Implementación en SQL Server Express
 
-> **Script completo en el repositorio:** [`sql/tecnico/seguridad/Seguridad.sql`](../../sql/tecnico/seguridad/prueba_seguridad.sql)
+> **Script completo en el repositorio:** [`sql/tecnico/seguridad/Seguridad.sql`](../../sql/tecnico/seguridad/Seguridad.sql)
 
 ### Parte 1 — Permisos a nivel de usuarios
 
@@ -66,21 +66,43 @@ Se crean los inicios de sesión a nivel del servidor y sus respectivos usuarios 
 ```sql
 USE master;
 GO
+-- CREACIÓN DE INICIOS DE SESIÓN (LOGINS A NIVEL SERVIDOR)
 
-CREATE LOGIN usuario_admin 
-WITH PASSWORD = 'Admin123*', CHECK_POLICY = OFF;
+IF NOT EXISTS (SELECT 1 FROM sys.server_principals WHERE name = 'usuario_admin')
+BEGIN
+    CREATE LOGIN usuario_admin 
+    WITH PASSWORD = 'PassAdmin2026*', CHECK_POLICY = OFF;
+END;
 
-CREATE LOGIN usuario_lector 
-WITH PASSWORD = 'Lector123*', CHECK_POLICY = OFF;
+IF NOT EXISTS (SELECT 1 FROM sys.server_principals WHERE name = 'usuario_lector')
+BEGIN
+    CREATE LOGIN usuario_lector 
+    WITH PASSWORD = 'Ventas2026#', CHECK_POLICY = OFF;
+END;
+
+IF NOT EXISTS (SELECT 1 FROM sys.server_principals WHERE name = 'usuario_vendedor')
+BEGIN
+    CREATE LOGIN usuario_vendedor 
+    WITH PASSWORD = 'Ventas2026#', CHECK_POLICY = OFF;
+END;
 GO
 
 USE sistema_matiensos;
 GO
+-- CREACIÓN DE USUARIOS EN LA BASE DE DATOS (USERS)
 
-CREATE USER usuario_admin FOR LOGIN usuario_admin;
-CREATE USER usuario_lector FOR LOGIN usuario_lector;
+IF NOT EXISTS (SELECT 1 FROM sys.database_principals WHERE name = 'usuario_admin')
+    CREATE USER usuario_admin FOR LOGIN usuario_admin;
+
+IF NOT EXISTS (SELECT 1 FROM sys.database_principals WHERE name = 'usuario_lector')
+    CREATE USER usuario_lector FOR LOGIN usuario_lector;
+
+IF NOT EXISTS (SELECT 1 FROM sys.database_principals WHERE name = 'usuario_vendedor')
+    CREATE USER usuario_vendedor FOR LOGIN usuario_vendedor;
 GO
 ```
+
+> **Nota de idempotencia:** Las guardas `IF NOT EXISTS` sobre los catálogos del motor (`sys.server_principals` y `sys.database_principals`) hacen que el script sea **re-ejecutable**: puede aplicarse reiteradamente sobre una base ya configurada sin fallar por objetos duplicados.
 
 #### 1.2. Asignación de permisos al usuario administrador
 Se incorpora `usuario_admin` al rol fijo de base de datos `db_owner` para otorgarle control administrativo total:
@@ -106,22 +128,19 @@ GO
 
 ### Parte 2 — Permisos a nivel de roles personalizados (`rol_vendedor`)
 
-En un entorno real, una tienda cuenta con varios cajeros/vendedores . Administrar permisos individualmente es propenso a errores; por ello, se crea el rol `rol_vendedor`.
+En un entorno real, una tienda cuenta con varios cajeros/vendedores. Administrar permisos individualmente es propenso a errores; por ello, se crea el rol `rol_vendedor`.
 
-#### 2.1. Creación del rol y del usuario vendedor
+#### 2.1. Creación del rol y el usuario vendedor
+El inicio de sesión `usuario_vendedor` ya fue creado junto a los demás en el bloque de la sección 1.1 (todos los *logins* se registran en una única sentencia idempotente a nivel de servidor). Lo que se define aquí es el **rol de base de datos** y su usuario asociado:
+
 ```sql
-USE master;
-GO
-
-CREATE LOGIN usuario_vendedor 
-WITH PASSWORD = 'Vendedor123*', CHECK_POLICY = OFF;
-GO
-
 USE sistema_matiensos;
 GO
 
-CREATE USER usuario_vendedor FOR LOGIN usuario_vendedor;
-CREATE ROLE rol_vendedor;
+IF NOT EXISTS (SELECT 1 FROM sys.database_principals WHERE name = 'rol_vendedor' AND type = 'R')
+BEGIN
+    CREATE ROLE rol_vendedor;
+END;
 GO
 ```
 
@@ -174,7 +193,9 @@ Una duda técnica frecuente es:
 
 ## 5. Script de Demostración y Resultados Obtenidos
 
-> **Script ejecutable de pruebas:** [`sql/tecnico/seguradiad/prueba_seguridad.sql`](../../sql/tecnico/seguridad/prueba_seguridad.sql)
+> **Script ejecutable de pruebas:** [`sql/tecnico/seguridad/prueba_seguridad.sql`](../../sql/tecnico/seguridad/prueba_seguridad.sql)
+>
+> **Evidencia de ejecución (captura de consola):** [`Pruebas de Seguridad.pdf`](./Pruebas/Pruebas%20de%20Seguridad.pdf) — registro de la salida real de SSMS con los bloqueos esperados (`Msg 229`) y la venta registrada mediante el procedimiento almacenado.
 
 Mediante la instrucción `EXECUTE AS USER = '...'` de SQL Server, podemos simular la sesión de cada usuario y verificar el comportamiento del motor ante operaciones autorizadas y no autorizadas:
 
@@ -186,10 +207,32 @@ EXECUTE AS USER = 'usuario_lector';
 SELECT TOP 3 id_producto, nombre, precio, stock_actual FROM dbo.Producto;
 
 -- 2. Intento de leer la columna contraseña (BLOQUEADO POR DENY)
-SELECT nombre_usuario, contraseña FROM dbo.Usuario;
+BEGIN TRY
+    SELECT nombre_usuario, contraseña FROM dbo.Usuario;
+END TRY
+BEGIN CATCH
+    PRINT 'BLOQUEO EXITOSO (Esperado): ' + ERROR_MESSAGE();
+END CATCH;
 
 -- 3. Intento de modificar precios (BLOQUEADO)
-UPDATE dbo.Producto SET precio = 1.00 WHERE id_producto = 1;
+BEGIN TRY
+    UPDATE dbo.Producto SET precio = 1.00 WHERE id_producto = 1;
+END TRY
+BEGIN CATCH
+    PRINT 'BLOQUEO EXITOSO (Esperado): ' + ERROR_MESSAGE();
+END CATCH;
+
+-- 4. Intento de ejecutar el procedimiento almacenado de ventas (BLOQUEADO)
+BEGIN TRY
+    EXEC dbo.sp_RegistrarVenta
+        @id_medio_pago = 1,
+        @id_persona_usuario = 2,
+        @id_persona_cliente = 10,
+        @id_venta_generada = @IdVentaLector OUTPUT;
+END TRY
+BEGIN CATCH
+    PRINT 'BLOQUEO EXITOSO (Esperado): ' + ERROR_MESSAGE();
+END CATCH;
 
 REVERT;
 ```
@@ -197,9 +240,11 @@ REVERT;
 **Resultados obtenidos en consola:**
 * La consulta `SELECT` sobre `Producto` devuelve las filas correctamente.
 * Al intentar leer `contraseña` en `Usuario`:
-  `The SELECT permission was denied on the column 'contraseña' of the object 'Usuario', database 'sistema_matiensos', schema 'dbo'.`
+  `BLOQUEO EXITOSO (Esperado): The SELECT permission was denied on the column 'contraseña' of the object 'Usuario', database 'sistema_matiensos', schema 'dbo'.`
 * Al intentar ejecutar `UPDATE` sobre `Producto`:
-  `The UPDATE permission was denied on the object 'Producto', database 'sistema_matiensos', schema 'dbo'.`
+  `BLOQUEO EXITOSO (Esperado): The UPDATE permission was denied on the object 'Producto', database 'sistema_matiensos', schema 'dbo'.`
+* Al intentar ejecutar `sp_RegistrarVenta` sin permiso `EXECUTE`:
+  `BLOQUEO EXITOSO (Esperado): The EXECUTE permission was denied on the object 'sp_RegistrarVenta', database 'sistema_matiensos', schema 'dbo'.`
 
 ---
 
@@ -209,25 +254,52 @@ REVERT;
 ```sql
 EXECUTE AS USER = 'usuario_vendedor';
 
--- Intento 1: Insertar una venta directa salteando el procedimiento
-INSERT INTO dbo.Venta (id_venta, fecha_hora, total_venta, id_medio_pago, id_persona_usuario, id_persona_cliente)
-VALUES (9999, GETDATE(), 10.00, 1, 2, 4);
+-- Intento 1: Leer una tabla administrativa restringida
+BEGIN TRY
+    SELECT * FROM dbo.Proveedor;
+END TRY
+BEGIN CATCH
+    PRINT 'BLOQUEO EXITOSO (Esperado): ' + ERROR_MESSAGE();
+END CATCH;
 
--- Intento 2: Modificar directamente el precio o stock de un producto
-UPDATE dbo.Producto SET stock_actual = 999, precio = 100.00 WHERE id_producto = 2;
+-- Intento 2: Insertar una venta directa salteando el procedimiento
+BEGIN TRY
+    INSERT INTO dbo.Venta (id_venta, fecha_hora, total_venta, id_medio_pago, id_persona_usuario, id_persona_cliente)
+    VALUES (9999, GETDATE(), 10.00, 1, 2, 10);
+END TRY
+BEGIN CATCH
+    PRINT 'BLOQUEO EXITOSO (Esperado): ' + ERROR_MESSAGE();
+END CATCH;
+
+-- Intento 3: Modificar directamente el precio o stock de un producto
+BEGIN TRY
+    UPDATE dbo.Producto SET stock_actual = 999, precio = 100.00 WHERE id_producto = 2;
+END TRY
+BEGIN CATCH
+    PRINT 'BLOQUEO EXITOSO (Esperado): ' + ERROR_MESSAGE();
+END CATCH;
 
 REVERT;
 ```
 
 **Resultados obtenidos en consola:**
-* `Msg 229, Level 14, State 5: The INSERT permission was denied on the object 'Venta', database 'sistema_matiensos', schema 'dbo'.`
-* `Msg 229, Level 14, State 5: The UPDATE permission was denied on the object 'Producto', database 'sistema_matiensos', schema 'dbo'.`
+* `BLOQUEO EXITOSO (Esperado): The SELECT permission was denied on the object 'Proveedor', database 'sistema_matiensos', schema 'dbo'.`
+* `BLOQUEO EXITOSO (Esperado): The INSERT permission was denied on the object 'Venta', database 'sistema_matiensos', schema 'dbo'.`
+* `BLOQUEO EXITOSO (Esperado): The UPDATE permission was denied on the object 'Producto', database 'sistema_matiensos', schema 'dbo'.`
+
+> Estos errores corresponden al `Msg 229` (*permission denied*) del motor de SQL Server, interceptado por el bloque `CATCH` del script para reportar el bloqueo como un resultado esperado y no como una falla de ejecución.
 
 #### Caso B.2 — Registro de venta mediante `dbo.sp_RegistrarVenta` (Exitoso)
 ```sql
 EXECUTE AS USER = 'usuario_vendedor';
 
+-- 0. Se registra el stock antes de la venta (para contrastar el descuento)
+SELECT id_producto, nombre, stock_actual AS stock_antes_de_venta, precio
+FROM dbo.Producto
+WHERE id_producto = 2;
+
 -- 1. El vendedor prepara el carrito en su tabla temporal de sesión
+IF OBJECT_ID('tempdb..#DetalleTemp') IS NOT NULL DROP TABLE #DetalleTemp;
 CREATE TABLE #DetalleTemp (
     id_producto INT NOT NULL,
     cantidad    INT NOT NULL
@@ -238,9 +310,20 @@ INSERT INTO #DetalleTemp (id_producto, cantidad) VALUES (2, 1);
 DECLARE @IdNuevaVenta INT;
 EXEC dbo.sp_RegistrarVenta
     @id_medio_pago      = 1,
-    @id_persona_usuario = 2,
-    @id_persona_cliente = 4,
+    @id_persona_usuario = 2,   -- (Vendedora)
+    @id_persona_cliente = 10,  -- (Cliente)
     @id_venta_generada  = @IdNuevaVenta OUTPUT;
+
+PRINT 'ÉXITO: Venta registrada correctamente a través del SP. ID Venta Generado: ' + CAST(@IdNuevaVenta AS VARCHAR(10));
+
+-- 3. Verificación posterior: la cabecera y el stock se actualizaron igual
+SELECT id_venta, fecha_hora, total_venta, id_medio_pago, id_persona_usuario, id_persona_cliente
+FROM dbo.Venta
+WHERE id_venta = @IdNuevaVenta;
+
+SELECT id_producto, nombre, stock_actual AS stock_despues_de_venta, precio
+FROM dbo.Producto
+WHERE id_producto = 2;
 
 DROP TABLE #DetalleTemp;
 REVERT;
@@ -256,6 +339,8 @@ REVERT;
 | `dbo.Venta` | `INSERT` de cabecera (`total_venta = 38000.00`) | **Denegado** | **Ejecutado con éxito** |
 | `dbo.DetalleVenta` | `INSERT` del ítem (`id_producto = 2`, `cantidad = 1`) | **Denegado** | **Ejecutado con éxito** |
 | `dbo.Producto` | `UPDATE` descontando 1 unidad de `stock_actual` | **Denegado** | **Ejecutado con éxito** |
+
+> **Nota de trazabilidad del `@id_persona_cliente`:** El procedimiento valida la existencia del cliente (`THROW 50006`) y del usuario (`THROW 50004`) antes de operar, por lo que el valor utilizado debe corresponder a un registro existente en `dbo.Cliente` y `dbo.Usuario` de la base donde se ejecuta la demostración. La población de referencia del proyecto (`sql/dml/poblacion_personas.sql`) carga los clientes con identificadores **4 a 8**, por lo que, al ejecutar la prueba sobre una base recién poblada, el valor debe ajustarse a uno de esos identificadores (por ejemplo `4`) o bien extenderse la población de clientes con el identificador utilizado por el script.
 
 ---
 
