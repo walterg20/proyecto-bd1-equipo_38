@@ -147,12 +147,33 @@ PRINT '-> Sesión actual ejecutando como: ' + USER_NAME();
 
 -- CASO 1: 
 -- Prueba de Error: Intenta insertar una venta  directamente en la tabla Venta
-INSERT INTO Venta (fecha_hora, total_venta, id_medio_pago, id_persona_usuario, id_persona_cliente)
-VALUES (GETDATE(), 10.00, 1, 2, 4);
+EXECUTE AS USER = 'usuario_vendedor';
+PRINT '-> Contexto actual de ejecución: ' + USER_NAME();
+
+-- Intento de INSERT directo en la tabla VENTA
+PRINT '--- Intentando INSERT directo en la tabla Venta sin usar el SP.';
+BEGIN TRY
+    INSERT INTO dbo.Venta (id_venta, fecha_hora, total_venta, id_medio_pago, id_persona_usuario, id_persona_cliente)
+    VALUES (9999, GETDATE(), 10.00, 1, 2, 10);
+    PRINT 'ERROR DE SEGURIDAD: No se debe permitir insertar ventas por fuera del procedimiento.';
+END TRY
+BEGIN CATCH
+    PRINT 'BLOQUEO EXITOSO (Esperado): ' + ERROR_MESSAGE();
+END CATCH;
+
+-- Restaura la sesión
+REVERT;
 
 -- CASO 2:
 -- Operación Permitida: Registrar la venta a través del Procedimiento Almacenado
+EXECUTE AS USER = 'usuario_vendedor';
+PRINT '-> Contexto actual de ejecución: ' + USER_NAME();
+
 DECLARE @VentaId INT;
+
+SELECT id_producto, nombre, stock_actual AS stock_antes_de_venta, precio
+    FROM dbo.Producto
+    WHERE id_producto = 2;
 
 EXEC dbo.sp_RegistrarVentaCompleta
     @id_persona_usuario = 2,
@@ -162,6 +183,14 @@ EXEC dbo.sp_RegistrarVentaCompleta
     @cantidad = 1,
     @id_venta_generada = @VentaId OUTPUT;
 
+ -- Verificar que la venta se insertó y el stock se descontó aunque el vendedor no tenga permisos directos
+    SELECT id_venta, fecha_hora, total_venta, id_medio_pago, id_persona_usuario, id_persona_cliente
+    FROM dbo.Venta
+    WHERE id_venta = @IdNuevaVenta;
+
+    SELECT id_producto, nombre, stock_actual AS stock_despues_de_venta, precio
+    FROM dbo.Producto
+    WHERE id_producto = 2;
+
 -- Restaura la sesión
 REVERT;
-PRINT '-> Contexto restaurado a: ' + USER_NAME();
