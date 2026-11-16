@@ -137,3 +137,31 @@ END CATCH;
 REVERT;
 PRINT '-> Contexto restaurado a: ' + USER_NAME();
 GO
+
+------------------------------------------------------------------------------------------------------------------------
+-- DEMOS
+----------------------------------------------------------------------------------------------------------------------
+-- Cambiamos el contexto de seguridad al usuario vendedor:
+EXECUTE AS USER = 'usuario_vendedor';
+PRINT '-> Sesión actual ejecutando como: ' + USER_NAME();
+
+-- CASO 1: 
+-- Prueba de Error: Intenta insertar una venta  directamente en la tabla Venta
+INSERT INTO Venta (fecha_hora, total_venta, id_medio_pago, id_persona_usuario, id_persona_cliente)
+VALUES (GETDATE(), 10.00, 1, 2, 4);
+
+-- CASO 2:
+-- Operación Permitida: Registrar la venta a través del Procedimiento Almacenado
+DECLARE @VentaId INT;
+
+EXEC dbo.sp_RegistrarVentaCompleta
+    @id_persona_usuario = 2,
+    @id_persona_cliente = 4,
+    @id_medio_pago = 1,
+    @id_producto = 2, -- Mate Torpedo
+    @cantidad = 1,
+    @id_venta_generada = @VentaId OUTPUT;
+
+-- Restaura la sesión
+REVERT;
+PRINT '-> Contexto restaurado a: ' + USER_NAME();

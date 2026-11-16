@@ -31,9 +31,9 @@ PRINT '=========================================================================
 PRINT 'TEMA 4: SEGURIDAD, ROLES Y ENCADENAMIENTO DE PROPIEDAD';
 PRINT '=========================================================================';
 
--- =========================================================================
--- PRUEBA 1: PERFIL LECTOR (usuario_lector)
--- =========================================================================
+
+
+
 PRINT '';
 PRINT '=========================================================================';
 PRINT 'PRUEBA 1: PERFIL LECTOR (usuario_lector)';
@@ -42,9 +42,11 @@ PRINT '=========================================================================
 EXECUTE AS USER = 'usuario_lector';
 PRINT 'Contexto actual: ' + USER_NAME();
 
+
 PRINT '';
 PRINT '--- 1.A SELECT permitido sobre Producto ---';
 SELECT TOP 3 id_producto, nombre, precio, stock_actual FROM dbo.Producto;
+
 
 PRINT '';
 PRINT '--- 1.B SELECT sobre columna contrasenia (debe fallar) ---';
@@ -56,6 +58,7 @@ BEGIN CATCH
     PRINT 'Bloqueo esperado: ' + ERROR_MESSAGE();
 END CATCH;
 
+
 PRINT '';
 PRINT '--- 1.C UPDATE directo sobre Producto (debe fallar) ---';
 BEGIN TRY
@@ -65,6 +68,7 @@ END TRY
 BEGIN CATCH
     PRINT 'Bloqueo esperado: ' + ERROR_MESSAGE();
 END CATCH;
+
 
 PRINT '';
 PRINT '--- 1.D EXECUTE sobre sp_RegistrarVenta (debe fallar) ---';
@@ -86,9 +90,12 @@ PRINT '';
 PRINT 'Contexto restaurado: ' + USER_NAME();
 GO
 
--- =========================================================================
--- PRUEBA 2: PERFIL VENDEDOR (usuario_vendedor / rol_vendedor)
--- =========================================================================
+
+
+
+
+
+
 PRINT '';
 PRINT '=========================================================================';
 PRINT 'PRUEBA 2: PERFIL VENDEDOR (usuario_vendedor / rol_vendedor)';
@@ -107,6 +114,7 @@ BEGIN CATCH
     PRINT 'Bloqueo esperado: ' + ERROR_MESSAGE();
 END CATCH;
 
+
 PRINT '';
 PRINT '--- 2.B INSERT directo en Venta (debe fallar) ---';
 BEGIN TRY
@@ -117,6 +125,7 @@ END TRY
 BEGIN CATCH
     PRINT 'Bloqueo esperado: ' + ERROR_MESSAGE();
 END CATCH;
+
 
 PRINT '';
 PRINT '--- 2.C UPDATE directo sobre Producto (debe fallar) ---';
