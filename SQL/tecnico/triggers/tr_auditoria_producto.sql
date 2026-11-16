@@ -68,7 +68,10 @@ BEGIN
         d.esta_activo,
         d.id_categoria,
         @operacion,
-        SUSER_SNAME()
+        SUSER_SNAME() -- Usuario autenticado
     FROM deleted d;
 END;
 GO
+
+
+

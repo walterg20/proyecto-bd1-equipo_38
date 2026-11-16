@@ -20,29 +20,37 @@ DECLARE @StockPrevio INT;
 DECLARE @StockPosterior INT;
 DECLARE @IdVentaGenerada INT;
 
--- Verifica el stock antes de operar
-SELECT @StockPrevio = stock_actual FROM Producto WHERE id_producto = @ProductoId;
+-- Stock antes de operar
+SELECT @StockPrevio = stock_actual 
+FROM Producto 
+WHERE id_producto = @ProductoId;
 PRINT 'Stock inicial del producto ' + CAST(@ProductoId AS VARCHAR) + ': ' + CAST(@StockPrevio AS VARCHAR);
 
 BEGIN TRY
     BEGIN TRANSACTION;
+
     -- Valida disponibilidad dentro de la transacción
     IF (SELECT stock_actual FROM Producto WHERE id_producto = @ProductoId) < @CantidadComprar
     BEGIN
         RAISERROR('Stock insuficiente.', 16, 1);
     END;
+
     -- Inserta cabecera
     INSERT INTO Venta (fecha_hora, total_venta, id_medio_pago, id_persona_usuario, id_persona_cliente)
     VALUES (GETDATE(), 90000.00, 1, 2, 4);
+
     -- Recupera el ID autoincremental
     SELECT @IdVentaGenerada = SCOPE_IDENTITY();
+
     -- Inserta detalle vinculando el ID generado
     INSERT INTO DetalleVenta (id_venta, id_producto, precio_congelado, cantidad)
     VALUES (@IdVentaGenerada, @ProductoId, 45000.00, @CantidadComprar);
+
     -- Descuenta el stock
     UPDATE Producto
     SET stock_actual = stock_actual - @CantidadComprar
     WHERE id_producto = @ProductoId;
+    
     -- Si no hubo errores, confirma
     COMMIT TRANSACTION;
     PRINT '>> Transacción confirmada exitosamente con COMMIT. ID Venta: ' + CAST(@IdVentaGenerada AS VARCHAR);
@@ -54,7 +62,9 @@ BEGIN CATCH
 END CATCH;
 
 -- Verifica el stock posterior
-SELECT @StockPosterior = stock_actual FROM Producto WHERE id_producto = @ProductoId;
+SELECT @StockPosterior = stock_actual 
+FROM Producto 
+WHERE id_producto = @ProductoId;
 PRINT 'Stock final del producto: ' + CAST(@StockPosterior AS VARCHAR) + ' (Disminuyó en ' + CAST(@CantidadComprar AS VARCHAR) + ')';
 PRINT '';
 GO
@@ -72,23 +82,27 @@ DECLARE @StockPosterior INT;
 DECLARE @IdVentaFallida INT;
 
 -- Consulta el stock actual
-SELECT @StockPrevio = stock_actual FROM Producto WHERE id_producto = @ProductoId;
+SELECT @StockPrevio = stock_actual 
+FROM Producto 
+WHERE id_producto = @ProductoId;
 PRINT 'Stock inicial antes del intento: ' + CAST(@StockPrevio AS VARCHAR);
 
 BEGIN TRY
     BEGIN TRANSACTION;
 
-    -- Intenta registrar la cabecera
+    -- Registra la cabecera de la venta
     INSERT INTO Venta (fecha_hora, total_venta, id_medio_pago, id_persona_usuario, id_persona_cliente)
     VALUES (GETDATE(), 9999999.00, 1, 2, 4);
 
     -- Captura el ID asignado
     SELECT @IdVentaFallida = SCOPE_IDENTITY();
+    
     -- Verifica si hay stock suficiente
     IF (SELECT stock_actual FROM Producto WHERE id_producto = @ProductoId) < @CantidadExcesiva
     BEGIN
         RAISERROR('Falta de existencias: Stock insuficiente para cubrir la demanda solicitada.', 16, 1);
     END;
+    
     -- Si llegara a haber stock, continuaría
     INSERT INTO DetalleVenta (id_venta, id_producto, precio_congelado, cantidad)
     VALUES (@IdVentaFallida, @ProductoId, 45000.00, @CantidadExcesiva);

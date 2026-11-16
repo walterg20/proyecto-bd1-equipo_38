@@ -1,7 +1,8 @@
 USE master;
 GO
---CREACIÓN DE INICIOS DE SESIÓN (LOGINS A NIVEL SERVIDOR)
 
+
+--CREACIÓN DE INICIOS DE SESIÓN (LOGINS A NIVEL SERVIDOR)
 
 IF NOT EXISTS (SELECT 1 FROM sys.server_principals WHERE name = 'usuario_admin')
 BEGIN
@@ -40,7 +41,6 @@ GO
 
 -- ASIGNACIÓN DE PERMISOS A NIVEL DE USUARIO 
 
-
 -- 1. Usuario Administrador: Control total mediante el rol fijo db_owner
 ALTER ROLE db_owner ADD MEMBER usuario_admin;
 GO
@@ -52,8 +52,8 @@ GRANT SELECT ON SCHEMA :: dbo TO usuario_lector;
 DENY SELECT ON dbo.Usuario (contraseña) TO usuario_lector;
 GO
 
--- CREACIÓN Y CONFIGURACIÓN DE ROLES PERSONALIZADOS
 
+-- CREACIÓN Y CONFIGURACIÓN DE ROLES PERSONALIZADOS
 
 -- 1. Crear el rol para el perfil de atención en mostrador / ventas
 IF NOT EXISTS (SELECT 1 FROM sys.database_principals WHERE name = 'rol_vendedor' AND type = 'R')

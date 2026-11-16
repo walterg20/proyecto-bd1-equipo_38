@@ -67,6 +67,8 @@ PRINT '';
 PRINT 'Precio restaurado a su valor original.';
 GO
 
+
+
 PRINT '';
 PRINT '--- 3.2 Trigger INSTEAD OF DELETE: proteccion de Categoria ---';
 

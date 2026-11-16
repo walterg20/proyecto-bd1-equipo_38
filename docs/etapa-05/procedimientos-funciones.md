@@ -68,6 +68,6 @@ EXEC dbo.sp_RegistrarVentaCompleta
     @cantidad = 1,
     @id_venta_generada = @IdNuevaVenta OUTPUT;
 
--- Verifica el comprobante emitido
+-- Verifica
 SELECT * FROM Venta WHERE id_venta = @IdNuevaVenta;
 ```

@@ -36,3 +36,24 @@ BEGIN
     WHERE id_categoria IN (SELECT id_categoria FROM deleted);
 END;
 GO
+
+
+---- DEMO -----
+PRINT 'Intento 1: borrar categoria 1 (tiene productos asociados).';
+BEGIN TRY
+    DELETE FROM dbo.Categoria WHERE id_categoria = 1;
+    PRINT 'ERROR: la operacion no debio permitirse.';
+END TRY
+BEGIN CATCH
+    PRINT 'Bloqueo esperado: ' + ERROR_MESSAGE();
+END CATCH;
+
+
+PRINT 'Intento 2: borrar una categoria sin productos asociados.';
+IF NOT EXISTS (SELECT 1 FROM dbo.Categoria WHERE id_categoria = 99)
+    INSERT INTO dbo.Categoria (id_categoria, nombre, descripcion)
+    VALUES (99, 'Categoria Demo', 'Solo para prueba de trigger');
+
+DELETE FROM dbo.Categoria WHERE id_categoria = 99;
+PRINT 'Borrado permitido: la categoria demo no tenia productos vinculados.';
+GO
