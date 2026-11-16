@@ -1,6 +1,6 @@
 -- 1. Crear la tabla de pruebas masiva adaptada a Matiensos
 CREATE TABLE Venta_Masiva (
-    id_venta BIGINT IDENTITY(1,1) PRIMARY KEY,
+    id_venta BIGINT IDENTITY(1,1) ,
     fecha_venta DATE NOT NULL,
     total_venta DECIMAL (12,2) NOT NULL
 );

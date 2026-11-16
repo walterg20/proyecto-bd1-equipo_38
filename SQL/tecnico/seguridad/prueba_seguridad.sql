@@ -16,7 +16,7 @@ FROM dbo.Producto;
 -- 1.B. Intento de leer columna sensible (contraseña) bloqueada con DENY
 PRINT '--- [1.B] Intentando leer contraseñas de la tabla Usuario (DENY a nivel columna)...';
 BEGIN TRY
-    SELECT nombre_usuario, contraseña FROM dbo.Usuario;
+    SELECT nombre_usuario, contrasenia FROM dbo.Usuario;
     PRINT 'ERROR DE SEGURIDAD: La consulta no debió permitirse.';
 END TRY
 BEGIN CATCH
@@ -40,7 +40,7 @@ BEGIN TRY
     EXEC dbo.sp_RegistrarVenta 
         @id_medio_pago = 1, 
         @id_persona_usuario = 2, 
-        @id_persona_cliente = 10, 
+        @id_persona_cliente = 4, 
         @id_venta_generada = @IdVentaLector OUTPUT;
 END TRY
 BEGIN CATCH
